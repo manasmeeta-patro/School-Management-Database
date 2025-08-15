@@ -1,0 +1,2 @@
+Developed a responsive React.js application implementing full CRUD functionality using React Router v6, JSON Server for mock API, and modular components. The app features dynamic routing, nested routes, and data manipulation via RESTful API calls. Implemented user management (Add, Edit, Delete, View), conditional rendering, and route-based component loading. Integrated functional components using React Hooks like useState, useEffect, and useNavigate for smooth user experience and state management.
+
