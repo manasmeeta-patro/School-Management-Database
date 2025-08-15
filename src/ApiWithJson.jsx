@@ -5,6 +5,9 @@ import "./App.css";
 export default function ApiWithJson() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+//    for the deploy varcel need to use enviromnet variable
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const url = "http://localhost:3000/users";
     const navigate = useNavigate();
 

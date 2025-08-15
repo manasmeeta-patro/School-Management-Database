@@ -6,7 +6,13 @@ export default function UserEdit() {
     const [name, setName] = useState("");
     const [userid, setUserId] = useState("");
     const [age, setAge] = useState("");
-    const url = `http://localhost:3000/users/${id}`;
+
+    // ✅ Use environment variable for API base URL for normal react for vite need to use import.
+    // const API_URL = process.env.REACT_APP_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL;
+
+    const url = `${API_URL}/users/${id}`;
+
     const navigate = useNavigate();
 
     // Fetch user data when component loads

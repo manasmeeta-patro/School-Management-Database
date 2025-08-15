@@ -4,6 +4,9 @@ export default function AddUser(){
     const [name,setName]=useState('');
     const [id,setId]=useState('');
     const [age,setAge]=useState('');
+    // for evironment variable from vite to varcel deploy   
+    const API_URL = import.meta.env.VITE_API_URL;
+
     let url='http://localhost:3000/users';
     const createUser=async()=>{
         console.log(name,id,age);
