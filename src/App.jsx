@@ -2,7 +2,8 @@ import { Route, Routes } from "react-router"
 import Home from "./Home";
 import About from "./About";
 import Login from "./Login";
-import PageNotFound from "./pageNotFound";
+import PageNotFound from "./PageNotFound";
+
 import College from "./college";
 import Student from "./student";
 import Teacher from "./teacher";
