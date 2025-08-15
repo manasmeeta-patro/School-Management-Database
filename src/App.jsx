@@ -8,7 +8,7 @@ import Student from "./student";
 import Teacher from "./teacher";
 import UserList from "./UserList";
 
-import "./app.css";
+import "./App.css";
 import AddUser from "./AddUser";
 import NavBar from "./NavBar";
 import UserDetails from "./UserDetails";
