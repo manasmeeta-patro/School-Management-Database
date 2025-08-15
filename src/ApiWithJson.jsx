@@ -4,31 +4,41 @@ import "./app.css";
 
 export default function ApiWithJson() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const url = 'http://localhost:3000/users';
+    const [loading, setLoading] = useState(true);
+    const url = "http://localhost:3000/users";
     const navigate = useNavigate();
 
     const getUserData = useCallback(async () => {
-        let res = await fetch(url);
-        res = await res.json();
-        console.log(res);
-        setData(res);
-        setLoading(false);
-    }, [url]); // add dependencies if url is dynamic here optional
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("Failed to fetch data");
+            const json = await res.json();
+            console.log(json);
+            setData(json);
+        } catch (error) {
+            console.error(error);
+            alert("Error fetching users");
+        } finally {
+            setLoading(false);
+        }
+    }, []); // url is constant, no need to add to dependencies
 
     useEffect(() => {
-        setLoading(true);
         getUserData();
-    }, [getUserData]); // ✅ now it's safe
+    }, [getUserData]);
 
     const deleteData = async (id) => {
-        let res = await fetch(`${url}/${id}`, { method: 'DELETE' });
-        res = await res.json();
-        if (res) {
-            alert("user deleted");
-            getUserData();
-        }
-    };
+    try {
+        const res = await fetch(`${url}/${id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Delete request failed");
+        alert("User deleted");
+        getUserData(); // runs after
+    } catch (error) {
+        console.error(error);
+        alert("Error deleting user");
+    }
+};
+
 
     const editUser = (id) => {
         navigate(`/about/edit/${id}`);
@@ -36,24 +46,26 @@ export default function ApiWithJson() {
 
     return (
         <>
-            {
-                !loading ? (
-                    <>
-                        <h2>integrate json with api</h2>
-                        {data.map((user) => (
-                            <ul className="user-list" key={user.id}>
-                                <li className="link">{user.id}</li>
-                                <li className="link">{user.name}</li>
-                                <li>{user.age}</li>
-                                <li><button onClick={() => deleteData(user.id)}>Delete</button></li>
-                                <li><button onClick={() => editUser(user.id)}>Edit</button></li>
-                            </ul>
-                        ))}
-                    </>
-                ) : (
-                    <h1>data loading.........</h1>
-                )
-            }
-        </>
+            {loading ? (
+                <h1>Data loading...</h1>
+            ) : (
+                <>
+                    <h2>Integrate JSON with API</h2>
+                    {data.map((user) => (
+                        <ul className="user-list" key={user.id}>
+                            <li className="link">{user.id}</li>
+                            <li className="link">{user.name}</li>
+                            <li>{user.age}</li>
+                            <li>
+                                <button onClick={() => deleteData(user.id)}>Delete</button>
+                            </li>
+                            <li>
+                                <button onClick={() => editUser(user.id)}>Edit</button>
+                            </li>
+                        </ul>
+                    ))}
+                </>
+            )}
+        </> 
     );
 }

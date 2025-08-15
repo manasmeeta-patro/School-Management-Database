@@ -1,58 +1,75 @@
-import {  useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-export default function UserEdit(){
-    
-    const {id}=useParams();
-     const [name,setName]=useState('');
-    const [userid,setId]=useState('');
-    const [age,setAge]=useState('');
-    let url = `http://localhost:3000/users/${id}`; // ✅ Proper template literal
 
-    const navigate=useNavigate();
-   
+export default function UserEdit() {
+    const { id } = useParams();
+    const [name, setName] = useState("");
+    const [userid, setUserId] = useState("");
+    const [age, setAge] = useState("");
+    const url = `http://localhost:3000/users/${id}`;
+    const navigate = useNavigate();
 
-   
-    
-    const getUserData=async()=>{
-        console.log(name,age,userid)
-        try{
-        
-        let res = await fetch(url);
-        res=await res.json();
-        console.log(res);
-       setAge(res.age);
-       setName(res.name);
-       setId(res.userid);
-       console.log(setName);}
-       catch{console.log("error")}
-    }
-     const updateUser=async()=>{
-        console.log(name,id,age);
-        let res= await fetch(url,{
-            method:'put',
-            body: JSON.stringify({userid,name,age}),
-        });
-        res=await res.json();
-        if(res){
-            alert('user updated');
-            navigate('/about');
-        }        
-    }
-    
-    getUserData();
-    
-   
-    return(
+    // Fetch user data when component loads
+    useEffect(() => {
+        const getUserData = async () => {
+            try {
+                let res = await fetch(url);
+                if (!res.ok) throw new Error("Failed to fetch user data");
+                let data = await res.json();
+                setName(data.name || "");
+                setAge(data.age || "");
+                setUserId(data.userid || "");
+            } catch (err) {
+                console.error(err);
+                alert("Error fetching user");
+            }
+        };
+        getUserData();
+    }, [url]);
+
+    // Update user data
+    const updateUser = async () => {
+        try {
+            let res = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userid, name, age })
+            });
+            if (!res.ok) throw new Error("Failed to update user");
+            alert("User updated successfully");
+            navigate("/about");
+        } catch (err) {
+            console.error(err);
+            alert("Error updating user");
+        }
+    };
+
+    return (
         <>
-        <input type="text" value={name} onChange={(event)=>setName(event.target.value)} placeholder="Enter user name"/>
-        <br/>
-         <input type="text" value={id} onChange={(event)=>setId(event.target.value)} placeholder="Enter id"/><br/>
-
-          <input type="text" value={age} onChange={(event)=>setAge(event.target.value)} placeholder="Enter age"/>
-            <br/>
+            <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter user name"
+            />
+            <br />
+            <input
+                type="text"
+                value={userid}
+                onChange={(e) => setUserId(e.target.value)}
+                placeholder="Enter user ID"
+            />
+            <br />
+            <input
+                type="text"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                placeholder="Enter age"
+            />
+            <br />
             <button onClick={updateUser}>Edit user</button>
         </>
-    )
-    
+    );
 }
-
