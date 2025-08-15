@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import "./app.css";
+import "./App.css";
 
 export default function ApiWithJson() {
     const [data, setData] = useState([]);
